@@ -1,0 +1,40 @@
+{
+  "name": "dont-bug",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@babel/preset-typescript": "^7.16.5",
+    "@babel/standalone": "^7.16.6",
+    "@types/prettier": "^2.4.2",
+    "firebase": "^9.6.1",
+    "monaco-editor": "^0.31.1",
+    "prettier": "^2.5.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rehype-react": "^7.0.3",
+    "rehype-sanitize": "^5.0.1",
+    "rehype-stringify": "^9.0.2",
+    "remark": "^14.0.2",
+    "remark-gfm": "^3.0.1",
+    "remark-rehype": "^10.1.0",
+    "unified": "^10.1.1"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.1.17",
+    "@types/babel__standalone": "^7.1.4",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "@vitejs/plugin-react": "^1.0.7",
+    "autoprefixer": "^10.4.0",
+    "firebase-tools": "^10.0.1",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.7",
+    "typescript": "^4.4.4",
+    "vite": "^2.7.2",
+    "vite-plugin-monaco-editor": "^1.0.10"
+  }
+}
