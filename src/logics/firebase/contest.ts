@@ -1,13 +1,14 @@
-import { getDatabase, ref, onValue, set } from "firebase/database";
-import { useCallback, useEffect, useState } from "react";
+import { getDatabase, ref, onValue, set, get } from "firebase/database";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { app } from ".";
+import { useAuth } from "../auth";
 
 const database = getDatabase(app);
 
 export type UserStatus = {
   code: string;
   results: boolean[];
-  updatedAt: Date;
+  // updatedAt: Date;
 };
 
 export type User = {
@@ -20,34 +21,61 @@ export type User = {
 export type Contest = {
   examination: string;
   testCode: string;
-  users: { [uid: string]: User };
 };
+
+export type ContestUsers = { [uid: string]: User };
 
 const getContestRef = (contestId: string) =>
   ref(database, `contests/${contestId}`);
 
+const getContestUsersRef = (contestId: string) =>
+  ref(database, `contest-users/${contestId}`);
+
 const getUserRef = (contestId: string, uid: string) =>
-  ref(database, `contests/${contestId}/users/${uid}`);
+  ref(database, `contest-users/${contestId}/${uid}`);
 
 export const useContest = (contestId: string) => {
   const [contest, setContest] = useState<Contest | undefined>();
+  const [contestUsers, setContestUsers] = useState<ContestUsers | undefined>();
+
   // contestId の assert
-  const contestRef = getContestRef(contestId);
+  const contestRef = useMemo(() => getContestRef(contestId), [contestId]);
+  const contestUsersRef = useMemo(
+    () => getContestUsersRef(contestId),
+    [contestId]
+  );
+
   useEffect(() => {
-    onValue(contestRef, (snapshot) => {
+    onValue(
+      contestRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        const examination = data.examination || "";
+        const testCode = data.testCode || "";
+        setContest({ examination, testCode });
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }, [contestRef]);
+
+  useEffect(() => {
+    onValue(contestUsersRef, (snapshot) => {
       const data = snapshot.val();
-      const examination = data.examination || "";
-      const testCode = data.testCode || "";
-      const users: Contest["users"] = {};
-      Object.keys(data.users).forEach((uid) => {
-        const user = data.users[uid];
+      const users: ContestUsers = {};
+
+      Object.keys(data).forEach((uid) => {
+        const user = data[uid];
+
         if (!user.displayName || !user.photoUrl || !user.uid || !user.status) {
           return;
         }
+
         if (
-          typeof user.code !== "string" ||
-          !(user.updatedAt instanceof Date) ||
-          !Array.isArray(user.results)
+          typeof user.status.code !== "string" ||
+          // !(user.status.updatedAt instanceof Date) ||
+          !Array.isArray(user.status.results)
         ) {
           return;
         }
@@ -59,26 +87,31 @@ export const useContest = (contestId: string) => {
           status: {
             code: user.status.code,
             results: user.status.results,
-            updatedAt: user.status.updatedAt,
+            // updatedAt: user.status.updatedAt,
           },
         };
       });
 
-      setContest({ examination, testCode, users });
+      setContestUsers(users);
     });
-  }, []);
-  return contest;
+  }, [contestUsersRef]);
+
+  return [contest, contestUsers] as const;
 };
 
 export const useCreateContest = () => {
-  return useCallback(async (contest: Contest) => {
-    // Firebase になんかあったはず
-    const contestId = Math.floor(Math.random() * 100000).toString();
+  const auth = useAuth();
+  return useCallback(
+    async (contest: Contest) => {
+      // Firebase になんかあったはず
+      const contestId = Math.floor(Math.random() * 100000).toString();
 
-    const contestRef = getContestRef(contestId);
-    await set(contestRef, contest);
-    return contestId;
-  }, []);
+      const contestRef = getContestRef(contestId);
+      await set(contestRef, { ...contest, uid: auth.uid });
+      return contestId;
+    },
+    [auth]
+  );
 };
 
 export const useUpdateContest = (contestId: string) => {

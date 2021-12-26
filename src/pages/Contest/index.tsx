@@ -14,12 +14,12 @@ import { ErrorMessage } from "~/parts/Error";
 export const Contest: VFC = () => {
   const { contestId } = useMatch().params;
   const user = useAuth();
-  const contest = useContest(contestId);
+  const [contest, contestUsers] = useContest(contestId);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const users = contest
-    ? Object.keys(contest.users).map((id) => {
-        return contest.users[id];
+  const users = contestUsers
+    ? Object.keys(contestUsers).map((id) => {
+        return contestUsers[id];
       })
     : [];
 
@@ -64,7 +64,7 @@ export const Contest: VFC = () => {
           displayName: user.displayName,
           photoUrl: user.photoUrl,
           uid: user.uid,
-          status: { code, results, updatedAt: new Date() },
+          status: { code, results },
         });
       } catch (err: any) {
         if ("message" in err) {

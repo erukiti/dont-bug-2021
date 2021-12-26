@@ -5,7 +5,6 @@ import { login } from "~/logics/firebase/auth";
 
 export const Top: VFC = () => {
   const auth = useAuth();
-  console.log(auth);
 
   if (!auth.uid) {
     return (

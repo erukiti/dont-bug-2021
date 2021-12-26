@@ -10,11 +10,9 @@ export const CreatePage: VFC = () => {
   const [testCode, setTestCode] = useState(SAMPLE_TESTCODE);
   const createContest = useCreateContest();
   const handleClick = useCallback(async () => {
-    console.log(11);
     const contestId = await createContest({
       examination,
       testCode,
-      users: {},
     });
     navigate({ to: `/${contestId}` });
   }, [examination, testCode]);
