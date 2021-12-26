@@ -1,51 +1,43 @@
 import {
   getAuth,
-  getRedirectResult,
   GoogleAuthProvider,
   signInWithRedirect,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { app } from ".";
+import { Auth } from "../auth";
 
-export const login = () => {
+export const login = async () => {
   signInWithRedirect(getAuth(app), new GoogleAuthProvider());
 };
 
-export const useAuth = () => {
-  const [displayName, setDisplayName] = useState<string | undefined>();
-  const [photoUrl, setPhotoUrl] = useState<string | undefined>();
+export const useFirebaseAuth = () => {
+  const [auth, setAuth] = useState({ isLoading: true } as Auth);
 
   useEffect(() => {
-    getRedirectResult(getAuth(app))
-      .then((result) => {
-        if (result) {
-          const user = result?.user;
-
-          // uid
-          // email
-          // emailVerified
-
-          if (
-            user.isAnonymous ||
-            !user.displayName ||
-            !user.photoURL ||
-            !user.emailVerified
-          ) {
-            return;
-          }
-
-          setDisplayName(user.displayName);
-          setPhotoUrl(user.photoURL);
-
-          console.log("OK", user);
+    const fetchAuth = async () => {
+      onAuthStateChanged(getAuth(app), (user) => {
+        if (
+          !user ||
+          user.isAnonymous ||
+          !user.displayName ||
+          !user.photoURL ||
+          !user.emailVerified
+        ) {
+          setAuth({ isLoading: false } as Auth);
+          return;
         }
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error("ERR", errorCode, errorMessage);
+        setAuth({
+          displayName: user.displayName,
+          photoUrl: user.photoURL,
+          uid: user.uid,
+          isLoading: false,
+        });
       });
+    };
+    fetchAuth();
   }, []);
 
-  return [displayName, photoUrl];
+  return auth;
 };

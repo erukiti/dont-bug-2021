@@ -1,7 +1,8 @@
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { useCallback, useEffect, useState } from "react";
+import { app } from ".";
 
-const database = getDatabase();
+const database = getDatabase(app);
 
 export type UserStatus = {
   code: string;
@@ -37,16 +38,18 @@ export const useContest = (contestId: string) => {
       setContest(snapshot.val());
     });
   }, []);
-  return [contest];
+  return contest;
 };
 
 export const useCreateContest = () => {
-  return useCallback((contest: Contest) => {
+  return useCallback(async (contest: Contest) => {
     // Firebase になんかあったはず
     const contestId = Math.floor(Math.random() * 100000).toString();
 
     const contestRef = getContestRef(contestId);
-    set(contestRef, contest);
+    console.log(contestId);
+    await set(contestRef, contest);
+    return contestId;
   }, []);
 };
 

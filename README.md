@@ -23,6 +23,10 @@
 
 にする予定
 
+## 動かし方
+
+Firebase で Google Auth と Realtime Database を有効にして設定を `.env.local` に書き出して、いい感じに `yarn dev` とか `npm run dev` する。
+
 ## 予定
 
 2022年になってもこのリポジトリとソフト名は「バグってはいけない2021」

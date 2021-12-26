@@ -3,8 +3,8 @@ import { createElement, useEffect, useRef } from "react";
 
 type Props = {
   value: string;
+  language: string;
   onChange: (value: string) => void;
-  onSave: () => void;
 };
 
 monaco.languages.registerDocumentFormattingEditProvider("typescript", {
@@ -24,8 +24,7 @@ monaco.languages.registerDocumentFormattingEditProvider("typescript", {
     ];
   },
 });
-export const Editor: React.VFC<Props> = ({ value, onChange, onSave }) => {
-  const language = "typescript";
+export const Editor: React.VFC<Props> = ({ value, onChange, language }) => {
   const height = "600px";
 
   const element = useRef<undefined | HTMLElement>();
