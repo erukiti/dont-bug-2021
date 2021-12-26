@@ -8,7 +8,11 @@ const runner = () => {
     const expect = <T = any>(received: T) => {
       return {
         toBe: (expected: T) => {
-          results.push(received === expected);
+          try {
+            results.push(received === expected);
+          } catch (err) {
+            results.push(false);
+          }
         },
       };
     };
@@ -68,15 +72,24 @@ const runner = () => {
 
     _addEventListener("message", function (e) {
       // var f = new Function("", "return (" + e.data + "\n);");
-      _eval(e.data);
-      _postMessage(results);
+      try {
+        _eval(e.data);
+        _postMessage(results);
+      } catch (err: any) {
+        if ("message" in err) {
+          _postMessage(err.message);
+        }
+      }
     });
   }.toString();
 
   return s;
 };
 
-export function safeEval(untrustedCode: string, timeout: number = 1000) {
+export function safeEval(
+  untrustedCode: string,
+  timeout: number = 1000
+): Promise<boolean[] | string> {
   return new Promise(function (resolve, reject) {
     var blobURL = URL.createObjectURL(
       new Blob([`(${runner()})()`], { type: "application/javascript" })

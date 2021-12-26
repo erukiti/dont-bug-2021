@@ -27,7 +27,7 @@ const getContestRef = (contestId: string) =>
   ref(database, `contests/${contestId}`);
 
 const getUserRef = (contestId: string, uid: string) =>
-  ref(database, `${getContestRef(contestId)}/users/${uid}`);
+  ref(database, `contests/${contestId}/users/${uid}`);
 
 export const useContest = (contestId: string) => {
   const [contest, setContest] = useState<Contest | undefined>();
@@ -35,7 +35,36 @@ export const useContest = (contestId: string) => {
   const contestRef = getContestRef(contestId);
   useEffect(() => {
     onValue(contestRef, (snapshot) => {
-      setContest(snapshot.val());
+      const data = snapshot.val();
+      const examination = data.examination || "";
+      const testCode = data.testCode || "";
+      const users: Contest["users"] = {};
+      Object.keys(data.users).forEach((uid) => {
+        const user = data.users[uid];
+        if (!user.displayName || !user.photoUrl || !user.uid || !user.status) {
+          return;
+        }
+        if (
+          typeof user.code !== "string" ||
+          !(user.updatedAt instanceof Date) ||
+          !Array.isArray(user.results)
+        ) {
+          return;
+        }
+
+        users[uid] = {
+          displayName: user.displayName,
+          photoUrl: user.photoUrl,
+          uid: user.uid,
+          status: {
+            code: user.status.code,
+            results: user.status.results,
+            updatedAt: user.status.updatedAt,
+          },
+        };
+      });
+
+      setContest({ examination, testCode, users });
     });
   }, []);
   return contest;
@@ -47,7 +76,6 @@ export const useCreateContest = () => {
     const contestId = Math.floor(Math.random() * 100000).toString();
 
     const contestRef = getContestRef(contestId);
-    console.log(contestId);
     await set(contestRef, contest);
     return contestId;
   }, []);
