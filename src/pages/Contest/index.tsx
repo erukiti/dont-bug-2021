@@ -80,24 +80,32 @@ export const Contest: VFC = () => {
   }
 
   return (
-    <div>
-      <div>
-        <div>{user.displayName}</div>
-        {user.photoUrl && (
-          <img src={user.photoUrl} className="rounded-full w-[48px] h-[48px]" />
-        )}
+    <div className="flex">
+      <div className="w-3/5 px-2">
+        <div className="bg-[#1e1e1e] px-2 pt-2 flex items-center gap-3">
+          <button
+            onClick={handleClick}
+            className="border-2 px-4 py-1 text-lg border-[#cc711d] text-[#cc711d] rounded-lg hover:text-[#bf0008] hover:cursor-pointer"
+          >
+            Run
+          </button>
+          <Results results={myResults} />
+        </div>
+        <div className="py-2 bg-[#1e1e1e]">
+          <Editor value={code} onChange={setCode} language="typescript" />
+        </div>
       </div>
-      <Online users={users} />
-      <button
-        onClick={handleClick}
-        className="border-2 px-2 py-1  bg-cyan-500 rounded-lg"
-      >
-        RUN
-      </button>
-      <ErrorMessage errorMessage={errorMessage} />
-      <Results results={myResults} />
-      <DisplayExamination text={contest.examination} />
-      <Editor value={code} onChange={setCode} language="typescript" />
+      <div className="w-2/5 px-2">
+        <DisplayExamination text={contest.examination} />
+        {errorMessage && (
+          <div className="border-[#bf0008] border-2 text-sm p-1 mt-5">
+            <ErrorMessage errorMessage={errorMessage} />
+          </div>
+        )}
+        <div className="mt-5">
+          <Online users={users} />
+        </div>
+      </div>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { CreatePage } from "~/pages/Create";
 
 import "~/index.css";
 import { useAuth } from "~/logics/auth";
+import { Header } from "~/parts/Header";
 
 const location = new ReactLocation();
 
@@ -39,6 +40,7 @@ const AuthorizedRouting = () => {
         { path: ":contestId", element: <Contest /> },
       ]}
     >
+      <Header />
       <Outlet />
     </Router>
   );

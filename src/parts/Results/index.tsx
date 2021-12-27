@@ -11,8 +11,8 @@ export const Results: VFC<Props> = ({ results }) => {
             key={i}
             className={
               res
-                ? "bg-blue-500 rounded-full w-5 h-5 inline-block"
-                : "bg-red-500 rounded-full w-5 h-5 inline-block"
+                ? "bg-blue-500 rounded-full w-3 h-3 inline-block"
+                : "bg-red-500 rounded-full w-3 h-3 inline-block"
             }
           />
         ))}

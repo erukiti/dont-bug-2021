@@ -25,7 +25,7 @@ monaco.languages.registerDocumentFormattingEditProvider("typescript", {
   },
 });
 export const Editor: React.VFC<Props> = ({ value, onChange, language }) => {
-  const height = "600px";
+  const height = "512px";
 
   const element = useRef<undefined | HTMLElement>();
   const editor = useRef<undefined | monaco.editor.IStandaloneCodeEditor>();
@@ -47,6 +47,7 @@ export const Editor: React.VFC<Props> = ({ value, onChange, language }) => {
         value,
         language,
         tabSize: 2,
+        fontSize: 14,
         theme: "vs-dark",
         minimap: {
           enabled: false,
