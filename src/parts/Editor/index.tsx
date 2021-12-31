@@ -1,5 +1,6 @@
 import * as monaco from "monaco-editor";
 import { createElement, useEffect, useRef } from "react";
+import { formatTypeScript } from "~/logics/contest/format";
 
 type Props = {
   value: string;
@@ -9,12 +10,7 @@ type Props = {
 
 monaco.languages.registerDocumentFormattingEditProvider("typescript", {
   async provideDocumentFormattingEdits(model) {
-    const prettier = await import("prettier/standalone");
-    const babel = await import("prettier/parser-babel");
-    const text = prettier.format(model.getValue(), {
-      parser: "babel",
-      plugins: [babel],
-    });
+    const text = formatTypeScript(model.getValue());
 
     return [
       {
@@ -24,6 +20,7 @@ monaco.languages.registerDocumentFormattingEditProvider("typescript", {
     ];
   },
 });
+
 export const Editor: React.VFC<Props> = ({ value, onChange, language }) => {
   const height = "512px";
 

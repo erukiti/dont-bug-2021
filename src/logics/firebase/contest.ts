@@ -2,12 +2,13 @@ import { getDatabase, ref, onValue, set, get } from "firebase/database";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { app } from ".";
 import { useAuth } from "../auth";
+import { ContestResultType, CONTEST_RESULT_TYPES } from "../contest";
 
 const database = getDatabase(app);
 
 export type UserStatus = {
   code: string;
-  results: boolean[];
+  resultType: ContestResultType;
   // updatedAt: Date;
 };
 
@@ -75,7 +76,7 @@ export const useContest = (contestId: string) => {
         if (
           typeof user.status.code !== "string" ||
           // !(user.status.updatedAt instanceof Date) ||
-          !Array.isArray(user.status.results)
+          !CONTEST_RESULT_TYPES.includes(user.status.resultType)
         ) {
           return;
         }
@@ -86,7 +87,7 @@ export const useContest = (contestId: string) => {
           uid: user.uid,
           status: {
             code: user.status.code,
-            results: user.status.results,
+            resultType: user.status.resultType,
             // updatedAt: user.status.updatedAt,
           },
         };
