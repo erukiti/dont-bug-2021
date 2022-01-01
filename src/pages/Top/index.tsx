@@ -4,18 +4,13 @@ import { Link } from "react-location";
 import { login } from "~/logics/firebase/auth";
 
 export const UnauthorizedTop: VFC = () => {
-  const auth = useAuth();
-
-  if (!auth.uid) {
-    return (
-      <div>
-        <button onClick={login} className="border-2 p-2 bg-cyan-500 rounded-lg">
-          ログイン
-        </button>
-      </div>
-    );
-  }
-  return <></>;
+  return (
+    <div>
+      <button onClick={login} className="border-2 p-2 bg-cyan-500 rounded-lg">
+        ログイン
+      </button>
+    </div>
+  );
 };
 
 export const Top: VFC = () => {
