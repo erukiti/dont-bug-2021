@@ -9,6 +9,7 @@ import { Online } from "~/parts/Online";
 import { ErrorMessage } from "~/parts/Error";
 import { ContestResultType, runContestJs } from "~/logics/contest";
 import { formatTypeScript } from "~/logics/contest/format";
+import { PrimaryButton } from "~/parts/Button/PrimaryButton";
 
 export const Contest: VFC = () => {
   const { contestId } = useMatch().params;
@@ -45,7 +46,6 @@ export const Contest: VFC = () => {
       const formatted = formatTypeScript(code);
       setCode(formatted);
       const res = await runContestJs(formatted, testCode);
-      console.log(res);
       setMyResult(res.type);
       updateUserStatus(contestId, user.uid, {
         displayName: user.displayName,
@@ -66,16 +66,16 @@ export const Contest: VFC = () => {
     <div className="flex">
       <div className="w-3/5 px-2">
         <div className="bg-[#1e1e1e] px-2 pt-2 flex items-center gap-3">
-          <button
-            onClick={handleClick}
-            className="border-2 px-4 py-1 text-lg border-[#cc711d] text-[#cc711d] rounded-lg hover:bg-[#cc711d] hover:text-gray-100 hover:cursor-pointer duration-100"
-          >
-            Run
-          </button>
+          <PrimaryButton onClick={handleClick}>Run</PrimaryButton>
           <div className="text-white">{myResult}</div>
         </div>
         <div className="py-2 bg-[#1e1e1e]">
-          <Editor value={code} onChange={setCode} language="typescript" />
+          <Editor
+            value={code}
+            onChange={setCode}
+            language="typescript"
+            height="480px"
+          />
         </div>
       </div>
       <div className="w-2/5 px-2">

@@ -3,7 +3,7 @@ import { useAuth } from "~/logics/auth";
 import { Link } from "react-location";
 import { login } from "~/logics/firebase/auth";
 
-export const Top: VFC = () => {
+export const UnauthorizedTop: VFC = () => {
   const auth = useAuth();
 
   if (!auth.uid) {
@@ -15,17 +15,17 @@ export const Top: VFC = () => {
       </div>
     );
   }
+  return <></>;
+};
 
+export const Top: VFC = () => {
   return (
     <div>
-      <div>
-        <div>{auth.displayName}</div>
-        {auth.photoUrl && <img src={auth.photoUrl} />}
-      </div>
-
-      <ul>
+      <ul className="mx-10 mt-10">
         <li>
-          <Link to="/create">作成</Link>
+          <Link to="/create" className="text-blue-500 hover:cursor-pointer">
+            問題作成
+          </Link>
         </li>
       </ul>
     </div>

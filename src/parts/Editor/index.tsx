@@ -6,6 +6,7 @@ type Props = {
   value: string;
   language: string;
   onChange: (value: string) => void;
+  height: string;
 };
 
 monaco.languages.registerDocumentFormattingEditProvider("typescript", {
@@ -21,9 +22,12 @@ monaco.languages.registerDocumentFormattingEditProvider("typescript", {
   },
 });
 
-export const Editor: React.VFC<Props> = ({ value, onChange, language }) => {
-  const height = "512px";
-
+export const Editor: React.VFC<Props> = ({
+  value,
+  onChange,
+  language,
+  height,
+}) => {
   const element = useRef<undefined | HTMLElement>();
   const editor = useRef<undefined | monaco.editor.IStandaloneCodeEditor>();
 

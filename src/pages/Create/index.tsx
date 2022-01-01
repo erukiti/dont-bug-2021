@@ -1,6 +1,7 @@
 import { useCallback, useState, VFC } from "react";
 import { useNavigate } from "react-location";
 import { useCreateContest } from "~/logics/firebase/contest";
+import { PrimaryButton } from "~/parts/Button/PrimaryButton";
 import { Editor } from "~/parts/Editor";
 import { SAMPLE_EXAMINATION, SAMPLE_TESTCODE } from "./sample";
 
@@ -18,16 +19,22 @@ export const CreatePage: VFC = () => {
   }, [examination, testCode]);
 
   return (
-    <div>
-      <button onClick={handleClick}>save</button>
+    <div className="mt-5 mx-5">
+      <PrimaryButton onClick={handleClick}>save</PrimaryButton>
       <div>出題文</div>
       <Editor
         value={examination}
         onChange={setExamination}
         language="markdown"
+        height="250px"
       />
       <div>テスト用コード</div>
-      <Editor value={testCode} onChange={setTestCode} language="typescript" />
+      <Editor
+        value={testCode}
+        onChange={setTestCode}
+        language="typescript"
+        height="400px"
+      />
     </div>
   );
 };

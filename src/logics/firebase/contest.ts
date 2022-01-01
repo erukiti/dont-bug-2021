@@ -65,6 +65,9 @@ export const useContest = (contestId: string) => {
     onValue(contestUsersRef, (snapshot) => {
       const data = snapshot.val();
       const users: ContestUsers = {};
+      if (!data) {
+        return;
+      }
 
       Object.keys(data).forEach((uid) => {
         const user = data[uid];
@@ -100,12 +103,22 @@ export const useContest = (contestId: string) => {
   return [contest, contestUsers] as const;
 };
 
+const RANDOM_STRING =
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+const createContestId = () => {
+  return Array(16)
+    .fill("")
+    .map((_) => RANDOM_STRING[Math.floor(Math.random() * RANDOM_STRING.length)])
+    .join("");
+};
+
 export const useCreateContest = () => {
   const auth = useAuth();
   return useCallback(
     async (contest: Contest) => {
-      // Firebase になんかあったはず
-      const contestId = Math.floor(Math.random() * 100000).toString();
+      // FIXME: [a-zA-Z0-9]{10}あたりで乱数生成した方がよさそう
+      const contestId = createContestId();
 
       const contestRef = getContestRef(contestId);
       await set(contestRef, { ...contest, uid: auth.uid });
