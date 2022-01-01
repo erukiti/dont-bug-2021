@@ -29,7 +29,6 @@ const runner = () => {
         "caches",
         "TEMPORARY",
         "PERSISTENT",
-        "console",
         // Optional, but trivial to get back
         "Array",
         "Boolean",
